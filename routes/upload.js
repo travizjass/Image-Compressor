@@ -58,6 +58,13 @@ function validateCSV(data) {
 }
 
 async function processImages(requestDoc) {
+    const imagesDir = path.join(__dirname, '..', 'public', 'images');
+
+    // Ensure the directory exists
+    if (!fs.existsSync(imagesDir)) {
+        fs.mkdirSync(imagesDir, { recursive: true });
+    }
+
     for (const imageEntry of requestDoc.images) {
         const outputUrls = [];
         for (const url of imageEntry.inputUrls) {
@@ -74,7 +81,7 @@ async function processImages(requestDoc) {
                     .toBuffer();
 
                 const outputFileName = `${uuidv4()}.jpg`;
-                const outputPath = path.join(__dirname, '..', 'public', 'images', outputFileName);
+                const outputPath = path.join(imagesDir, outputFileName);
                 fs.writeFileSync(outputPath, outputBuffer);
 
                 // Simulate URL saving (assuming you'd upload to a public server)
@@ -90,5 +97,6 @@ async function processImages(requestDoc) {
     requestDoc.status = 'completed';
     await requestDoc.save();
 }
+
 
 module.exports = router;
