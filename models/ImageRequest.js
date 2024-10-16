@@ -1,12 +1,16 @@
 const mongoose = require('mongoose');
 
-const imageRequestSchema = new mongoose.Schema({
-    requestID: String,
+const imageSchema = new mongoose.Schema({
     productName: String,
-    inputImageUrls: [String],
-    outputImageUrls: [String],
+    inputUrls: [String],
+    outputUrls: [String],
+});
+
+const requestSchema = new mongoose.Schema({
+    requestId: { type: String, required: true, unique: true },
     status: { type: String, default: 'pending' },
+    images: [imageSchema],
     createdAt: { type: Date, default: Date.now }
 });
 
-module.exports = mongoose.model('ImageRequest', imageRequestSchema);
+module.exports = mongoose.model('ImageRequest', requestSchema);
